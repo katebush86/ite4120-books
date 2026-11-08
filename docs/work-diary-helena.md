@@ -15,7 +15,7 @@
 
 ## 2026-11-08
 
-**Time spent:** 3 hours (incl. 1 h team call)
+**Time spent:** 4 hours (incl. 1 h team call)
 
 **Work completed:**
 - Forked the teacher's repository (`ite4120-books`) and moved our earlier docs and commit history into it; archived the old repository
@@ -25,6 +25,8 @@
 - Prepared setup instructions for Windows + VS Code and shared with the team and walked through the steps on team call
 - Planned the table folder structure under `backend/src/main/resources/books/`
 - Team call (1 h): agreed on next steps and split the work — Mari: book table and register form; Heiki: copy table and lending form; Helena: APIs (GET, POST, PUT, DELETE)
+- Set up the development environment on Windows: ran the tool setup script, created the GitHub token, configured Gradle and npm
+- Started the backend and frontend; the template app runs on localhost
 
 **AI assistance:**
 - Used AI to compare our spec and user story with the teacher's example and the assessment criteria
@@ -34,6 +36,8 @@
 **Corrections and decisions:**
 - Decided to fork the teacher's repository so he can see our work, while keeping all earlier commits
 - User story to be renamed to `BOOKS-US-001.md` so it matches the spec
+- Docker Desktop install from the setup script failed (error 1603) because Docker was already installed — kept the existing Docker
+- Frontend failed with 401 at first because the npm token was not set; fixed by setting the token with `npm config set`
 
 ## 2026-11-01
 
