@@ -27,7 +27,9 @@ A group project for the IT and eGov Technologies course: a library book catalogu
   - [ ] Helena
   - [ ] Mari
   - [ ] Heiki
-- [ ] **1. Fix the documents.** Then both read each other's version to check that they describe the same thing.
+- [ ] **1. Create user story & specification.** Mari creates the user story and Helena the spec. Then both read each other's version to check that they describe the same thing.  
+  - [ ] User story (Mari)
+  - [ ] Specification (Helena)
 - [x] **2. Agree on the table design.** Fields agreed on the team call and written into the spec.
   - Table 1: books (one row per book title)
   - Table 2: copies (one row per physical copy, with its current lending info)
