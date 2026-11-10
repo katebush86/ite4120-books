@@ -57,3 +57,29 @@ Time spent ca 2 hours
 **AI assistance:**
 - Used AI tools to review basic GitHub commands and gain a better understanding of the merge process
 
+
+
+**7. november 2026**
+
+Time spent ca 1,5 hours
+
+- Revisited the user story and reviewed the supporting documentation provided by igorboss/ite4120 to verify requirements and implementation details.
+
+
+
+**8. november 2026**
+
+Time spent ca 5 hours
+
+- Participated in teams call to discuss project's further steps
+- Reviewed the BOOKS-US-001 user story and BOOKS.01 specification.
+- Created the Books database module structure and implemented the books.book table.
+- Added Liquibase files (books-schema.sql, 01-book.sql, changelog.xml) and updated the master changelog.
+- Installed Python 3 to run the project validation scripts.
+- Ran check-changesets.ps1 and resolved formatting issues until all checks passed.
+- Committed and pushed the changes to the mari-books branch.
+- Investigated pull request workflow issues related to the fork relationship between the katebush86/ite4120-books and igorboss/ite4120 repositories.
+- Result: Completed Step 3 (database setup for books.book) and submitted the changes for review.
+
+  **AI assistance:**
+- Used AI-assisted support throughout the database implementation process, including requirements analysis, SQL design, troubleshooting, and validation issue resolution.
