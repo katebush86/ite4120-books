@@ -10,5 +10,6 @@
     <include file="books/db/changelog/books/books-schema.sql"/>
     <include file="books/db/changelog/books/01-book.sql"/>
     <include file="books/db/changelog/books/02-copy.sql"/>
+    <include file="books/db/changelog/books/90-demo-data.sql"/>
 
 </databaseChangeLog>
