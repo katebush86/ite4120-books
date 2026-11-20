@@ -12,15 +12,17 @@ Borrower identity is held as a personal code only; the borrower's name and detai
 
 Excluded: authentication and role-based visibility (mock auth only; library users and librarians see the same screens in this course), adding copies to an existing title, editing a registered title, lending history (only the current lending state of each copy is kept), a managed genre list (see Genre codes), fines, audit beyond the platform sys columns.
 
-## Data model *(→ session 2, changesets 01–02)*
+## Data model *(→ session 2, changesets 01–03)*
 
 | Table         | Field                    | Type    | Rules |
 |---------------|--------------------------|---------|-------|
+| `books.genre` | `code` PK               | text    | reference list: the ten genre codes below |
+|               | `name`                   | text    | display name |
 | `books.book`  | `id` PK                  | bigint  | a book title; from `core.seq_id` |
 |               | `isbn`                   | text    | required; exactly 10 or 13 digits, no hyphens or spaces; **unique among active rows** |
 |               | `title`                  | text    | required, ≤255 |
 |               | `author`                 | text    | required, ≤255 |
-|               | `genre`                  | text    | required; one of the genre codes below (check constraint) |
+|               | `genre`                  | text    | required; FK → `books.genre` |
 |               | `page_count`             | integer | required; **must be greater than 0** |
 |               | `publication_year`       | integer | required; 4 digits; **may be in the future** — see the Pre-order rule |
 |               | `sys_*`                  | —       | platform columns, trigger-managed; `sys_status` marks retired rows (soft delete) |
@@ -35,7 +37,7 @@ The borrower's name is not a column: it comes from the registry adapter (see API
 
 ### Genre codes
 
-A fixed list, enforced by a check constraint and mirrored in the screens; it is not a table. Adding a genre needs a migration and a screen change.
+A fixed list, kept in the reference table `books.genre` (seeded by changeset 03, like `animals.species`) and mirrored in the screens. Adding a genre needs a migration and a screen change.
 
 `FICTION`, `NON_FICTION`, `FANTASY`, `SCIENCE_FICTION`, `MYSTERY`, `BIOGRAPHY`, `HISTORY`, `CHILDREN`, `POETRY`, `OTHER`
 
@@ -67,7 +69,7 @@ When a `BORROWED` copy is returned and someone is waiting for it, it is set to `
 - **Every table has a surrogate `id`** (platform convention). The ISBN is the business identifier of a book title, unique among active titles. Each copy has its own `id`. Removing a title is a soft delete (platform convention), so after removal its ISBN can be registered again.
 - **The personal code is a string** because it is an identifier, not a quantity; a number type would lose leading zeros.
 - **Only the personal code is stored** because it is the minimum needed to link a copy to a person; the name and details live in the borrower register (one source of truth per fact). The code is cleared when the copy is no longer `BORROWED` or `IN_QUEUE`, so no personal data is kept after the lending or reservation ends.
-- **Genre and status are fixed lists** enforced by check constraints, which keeps the model at two tables. The cost is that adding a genre needs a migration and a screen change; a genre table with its own endpoint is a possible future extension.
+- **Genre is a reference table, status a check constraint.** Genre codes live in `books.genre` (like `animals.species`), so `book.genre` is a foreign key and the list exists once in the database. Status stays a check constraint, because its rules (borrower, due date) are part of `02-copy.sql`. Adding a genre still needs a migration and a screen change; an endpoint to manage genres is a possible future extension.
 - **Overdue days are computed** because a stored value would be wrong again the next day.
 - **No lending history:** the application stores the current lending state only. A loan history table is outside the scope of this project.
 

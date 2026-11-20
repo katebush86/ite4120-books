@@ -13,7 +13,7 @@ A group project for the IT and eGov Technologies course: a library book catalogu
 - Helena Toompalu
 
 ## Project requirements
-- Database with two tables: `books.book` and `books.copy` (foreign key copy → book)
+- Database with three tables: `books.book`, `books.copy` and the reference table `books.genre` (foreign keys copy → book, book → genre)
 - APIs: list/search books, register a book, update lending, remove a book
 - Borrower name fetched from the mock registry (X-Road style)
 - Two forms: register form and lending form, with field validation as in the spec
@@ -33,6 +33,7 @@ A group project for the IT and eGov Technologies course: a library book catalogu
 - [x] **2. Agree on the table design.** Fields agreed on the team call and written into the spec.
   - Table 1: books (one row per book title)
   - Table 2: copies (one row per physical copy, with its current lending info)
+  - Table 3: genres (reference list of the genre codes)
 - [ ] **3. Create the tables.** The books table must exist first, because copies point to it.
   - [x] Books table (Mari)
   - [x] Copies table (Heiki)
@@ -71,7 +72,7 @@ A group project for the IT and eGov Technologies course: a library book catalogu
 ### Comments
 
 - **Step 1:** rename the user story to `BOOKS-US-001.md` so it matches the spec. When all three agree, change the state of both from `Proposed` to `Confirmed`. No coding before that (teacher's rule).
-- **Step 2:** the tables are `books.book` and `books.copy`. The name of the second table is still open (`copy` or `item`). Genres are a fixed list inside the books table, not a separate table.
+- **Step 2:** the tables are `books.book`, `books.copy` and `books.genre`. Genres are a reference table (like the teacher's `animals.species`); `book.genre` is a foreign key to it.
 - **Step 3:** table files go in `backend/src/main/resources/books/db/changelog/books/`. Run `.\scripts\check-changesets.ps1` before each pull request. Never edit a merged SQL file; add a new numbered file
 
 

@@ -11,7 +11,7 @@ Team, requirements and work plan: [`TEAM.md`](TEAM.md).
 | Layer | Where |
 | --- | --- |
 | User story and specification | `docs/src/user-stories/`, `docs/src/specifications/BOOKS.01-book-register.md` |
-| Data — PostgreSQL + Liquibase (tables `books.book`, `books.copy`) | `backend/src/main/resources/books/db/` |
+| Data — PostgreSQL + Liquibase (tables `books.book`, `books.copy`, `books.genre`) | `backend/src/main/resources/books/db/` |
 | API — Spring Boot | `backend/src/main/java/ee/taltech/ite4120/books/` |
 | Borrower registry adapter (mock) | `.../books/borrowerregistry/` |
 | UI — React + @helex/ui | `frontend/src/pages/` |
