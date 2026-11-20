@@ -4,17 +4,17 @@
 --comment Physical copies of book titles and their current lending status
 
 create table books.copy (
-    id                       bigint default nextval('core.seq_id') not null,
-    book_id                  bigint not null,
-    status                   text not null,
+    id                  bigint default nextval('core.seq_id') not null,
+    book_id             bigint not null,
+    status              text not null,
     borrower_personal_code   text,
-    due_date                 date,
-    sys_status               char(1),
-    sys_version              int,
-    sys_created_at           timestamptz,
-    sys_created_by           text,
-    sys_modified_at          timestamptz,
-    sys_modified_by          text,
+    due_date            date,
+    sys_status          char(1),
+    sys_version         int,
+    sys_created_at      timestamptz,
+    sys_created_by      text,
+    sys_modified_at     timestamptz,
+    sys_modified_by     text,
     
     constraint copy_pk primary key (id),
 
