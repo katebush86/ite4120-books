@@ -1,6 +1,6 @@
 # BOOKS.01 · Book catalogue and lending
 
-> **BOOKS.01** · state **Proposed** · traces from `BOOKS-US-001` · source `backend/src/main/java/ee/taltech/ite4120/books/`, `backend/src/main/resources/books/db/changelog/`, `frontend/src/pages/`
+> **BOOKS.01** · state **Confirmed** · traces from `BOOKS-US-001` · source `backend/src/main/java/ee/taltech/ite4120/books/`, `backend/src/main/resources/books/db/changelog/`, `frontend/src/pages/`
 
 ## Description
 
@@ -17,7 +17,7 @@ Excluded: authentication and role-based visibility (mock auth only; library user
 | Table         | Field                    | Type    | Rules |
 |---------------|--------------------------|---------|-------|
 | `books.book`  | `id` PK                  | bigint  | a book title; from `core.seq_id` |
-|               | `isbn`                   | text    | required; 10 or 13 digits after stripping hyphens and spaces; stored without separators; **unique among active rows** |
+|               | `isbn`                   | text    | required; exactly 10 or 13 digits, no hyphens or spaces; **unique among active rows** |
 |               | `title`                  | text    | required, ≤255 |
 |               | `author`                 | text    | required, ≤255 |
 |               | `genre`                  | text    | required; one of the genre codes below (check constraint) |
@@ -75,18 +75,22 @@ When a `BORROWED` copy is returned and someone is waiting for it, it is set to `
 
 | Method + path | Does | Failure answers |
 |----------------|------|-----------------|
-| `GET /api/books` | returns the catalogue, **one row per copy**: `textContains` matches ISBN, title or author; filters are available for `genre` and `status`; each row carries the title data, copy status, due date, `overdueDays` and `borrowerName` | 400 unknown genre or status |
+| `GET /api/books` | returns the catalogue, **one row per copy**, paged like animals (`limit`, `offset`, `sort`; sort keys `title`, `author`, `isbn`, `publicationYear`, `status`, `dueDate`): `textContains` matches ISBN, title or author; filters are available for `genre` and `status`; each row carries `copyId`, `bookId`, the title data, copy status, `borrowerPersonalCode`, due date, `overdueDays` and `borrowerName` | 400 unknown genre, status or sort key |
+| `GET /api/books/{id}` | one book title with its active copies — where the `POST` Location points | 404 |
 | `POST /api/books` | registers a book title and creates `copyCount` copies (default 1, at least 1); answers **201 + Location** | 400 validation · 409 duplicate ISBN |
+| `GET /api/copies/{id}` | one copy as a catalogue row — what the lending form shows | 404 |
 | `PUT /api/copies/{id}` | sets the copy's lending data: `status`, `borrowerPersonalCode`, `dueDate` (the three fields are replaced as a whole) | 400 · 404 |
 | `DELETE /api/books/{id}` | removes (retires) the book title and all its copies using soft delete — **204** | 404 · 409 if a copy is `BORROWED` or `IN_QUEUE` |
 
-`POST /api/books` takes `isbn`, `title`, `author`, `genre`, `pageCount`, `publicationYear` and optionally `copyCount`.
+`POST /api/books` takes `isbn`, `title`, `author`, `genre`, `pageCount`, `publicationYear` and optionally `copyCount` (1–100, default 1). `isbn` must be exactly 10 or 13 digits; an ISBN with hyphens or spaces is refused with 400 "isbn must be 10 or 13 digits, without hyphens or spaces".
 
 All copies start as `AVAILABLE` (or `PRE_ORDER`, see the Pre-order rule). Lending information is set per copy afterwards with `PUT /api/copies/{id}`.
 
-In a `PUT`, a `BORROWED` copy with no `dueDate` gets today + 14 days.
+In a `PUT`, a `BORROWED` copy with no `dueDate` gets today + 14 days. A `dueDate` sent with any other status is refused with 400 "dueDate not allowed for this status"; `BORROWED` or `IN_QUEUE` without a borrower is refused with 400 "borrowerPersonalCode is required for status …".
 
 Every error is `application/problem+json`; a caller's mistake never answers 500. All endpoints require `Authorization: Bearer <user>` (mock auth); the API contract is live at `/swagger-ui.html`.
+
+**Borrower lookup:** the borrower-registry adapter asks the course's imitated population registry (`GET /mock-registry/persons/{personal code}`, the same mock the animals example uses); `borrowerName` is the person's first and last name. A personal code the registry does not know gives `borrowerName` `null`.
 
 **Failure policy** for the borrower lookup: **fail open** — when the borrower register is unreachable, `borrowerName` is `null` and everything else is returned normally. Rationale: the borrower's name is auxiliary here, never a precondition for displaying the catalogue.
 
@@ -94,15 +98,15 @@ Every error is `application/problem+json`; a caller's mistake never answers 500.
 
 | Screen | Element | Component | Rules |
 |--------|---------|-----------|-------|
-| Catalogue | table | `ResourceList` | one row per copy; columns: ISBN, title, author, genre tag, year, pages (hidden by default), status tag, due date, overdue days |
+| Catalogue `/books` | table | `ResourceList` | one row per copy; columns: ISBN, title, author, genre tag, year, pages (hidden by default), status tag, due date, overdue days |
 | | search field | `ResourceList` search | searches ISBN, title and author |
 | | filters | `Select` ×2 | genre (the fixed genre list), status (the six status codes) |
 | | overdue days | table cell | shown only when greater than 0, as a warning tag "N days overdue" |
 | | detail panel | `ResourceList.detailView` | shows the borrower's name; silently omits it when it is `null` |
 | | row action | `AppButtonPrimary` | "Update lending" opens the lending form for that copy |
-| | row action | `AppButton` | "Remove book" asks for confirmation, then `DELETE`; a 409 problem text is shown in a notification |
+| | row action | `AppButton` | "Remove book" asks for confirmation ("removes the title and all its copies"), then `DELETE`; a 409 problem text is shown in a notification |
 | | register button | `AppButtonPrimary` | opens the register form |
-| Register form | ISBN | `Input` | required, 10 or 13 digits |
+| Register form `/books/new` | ISBN | `Input` | required, exactly 10 or 13 digits, no hyphens or spaces |
 | | title | `Input` | required, ≤255 |
 | | author | `Input` | required, ≤255 |
 | | genre | `Select` | required, options from the fixed genre list |
@@ -110,7 +114,7 @@ Every error is `application/problem+json`; a caller's mistake never answers 500.
 | | year | `Input` (number) | required; a future year shows the hint "copies will be registered as Pre-order" |
 | | copies | `Input` (number) | at least 1, default 1 |
 | | submit | `AppButtonPrimary` | 400/409 problem text shown verbatim in a notification |
-| Lending form | copy | read-only text | ISBN, title and copy ID of the selected copy |
+| Lending form `/books/copies/{id}` | copy | read-only text | ISBN, title and copy ID of the selected copy |
 | | status | `Select` | required, the six status codes |
 | | borrower code | `Input` | pattern `\d{11}`; enabled only for `BORROWED` and `IN_QUEUE` |
 | | due date | `DatePicker` | enabled only for `BORROWED`; prefilled with today + 14 days |
@@ -128,7 +132,7 @@ Every error is `application/problem+json`; a caller's mistake never answers 500.
 
 5. **A borrowed copy has a borrower and a due date.** Given a request to set status `BORROWED` without a borrower personal code, when it is submitted, then it is refused (400). Given a `BORROWED` request with a borrower but no due date, the due date is set to today + 14 days.
 
-6. **An ISBN identifies exactly one active book title.** Given a registered title with ISBN X, when a second title claims X (with or without hyphens), the registration conflicts (409). When the first title has been removed, X may be registered again.
+6. **An ISBN identifies exactly one active book title.** Given a registered title with ISBN X, when a second title claims X, the registration conflicts (409). When the first title has been removed, X may be registered again.
 
 7. **A malformed personal code is rejected.** Given a lending request whose personal code has 10 digits or contains letters, when it is submitted, then it is refused (400) with a message naming the personal code.
 

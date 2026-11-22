@@ -50,3 +50,8 @@ animals:
     url: http://localhost:18440/mock-registry
     # The built-in imitated registry; enabled only in the local profile.
     mock-server: false
+
+books:
+  borrower-registry:
+    # The borrower's name comes from the same imitated population registry.
+    url: http://localhost:18440/mock-registry

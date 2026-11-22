@@ -2,13 +2,15 @@
 
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-        http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="
+ http://www.liquibase.org/xml/ns/dbchangelog
+ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
 
-    <include file="books/db/changelog/books/books-schema.sql"/>
-    <include file="books/db/changelog/books/01-book.sql"/>
-    <include file="books/db/changelog/books/03-book-fixes.sql"/>
+ <include file="books/db/changelog/books/books-schema.sql"/>
+ <include file="books/db/changelog/books/01-book.sql"/>
+ <include file="books/db/changelog/books/02-copy.sql"/>
+ <include file="books/db/changelog/books/03-book-fixes.sql"/>
+ <include file="books/db/changelog/books/90-demo-data.sql"/>
 
 </databaseChangeLog>
