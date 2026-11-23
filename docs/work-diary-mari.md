@@ -57,29 +57,28 @@ Time spent ca 2 hours
 **AI assistance:**
 - Used AI tools to review basic GitHub commands and gain a better understanding of the merge process
 
+**19-20. november 2026**
+
+Time spent ca 4 h
+
+**Work completed:**
+
+- Created 03-book-fixes.sql, added sys_* metadata columns and the active ISBN uniqueness index.
+- Updated the Liquibase changelog and verified database changes using check-changesets.ps1.
+- Created BookCreate.tsx and adapted the registration form for books (isbn, title, author, genre, pageCount, publicationYear).
+- Fixed formatting issues in BOOKS-US-001.md.
+- Investigated GitHub pull request workflow issues related to the forked repository structure and reviewed/approved Pull Request #7.
+- Attempted to set up a local test environment, installed WSL, and investigated Docker Desktop startup issues related to virtualization and WSL2 configuration.
+
+**AI assistance:**
+- Used AI-assisted support for implementation, troubleshooting, and validation.
 
 
-**7. november 2026**
 
-Time spent ca 1,5 hours
+**22. november 2026**
 
-- Revisited the user story and reviewed the supporting documentation provided by igorboss/ite4120 to verify requirements and implementation details.
+Time spent ca 2 h
 
-
-
-**8. november 2026**
-
-Time spent ca 5 hours
-
-- Participated in teams call to discuss project's further steps
-- Reviewed the BOOKS-US-001 user story and BOOKS.01 specification.
-- Created the Books database module structure and implemented the books.book table.
-- Added Liquibase files (books-schema.sql, 01-book.sql, changelog.xml) and updated the master changelog.
-- Installed Python 3 to run the project validation scripts.
-- Ran check-changesets.ps1 and resolved formatting issues until all checks passed.
-- Committed and pushed the changes to the mari-books branch.
-- Investigated pull request workflow issues related to the fork relationship between the katebush86/ite4120-books and igorboss/ite4120 repositories.
-- Result: Completed Step 3 (database setup for books.book) and submitted the changes for review.
-
-  **AI assistance:**
-- Used AI-assisted support throughout the database implementation process, including requirements analysis, SQL design, troubleshooting, and validation issue resolution.
+ **Work completed:**
+- Participated in a Team call to discuss project's final steps
+- In Github approved the last pull requests
